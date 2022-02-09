@@ -262,7 +262,7 @@ class DNS1D {
      * @return path or false in case of error.
      * @protected
      */
-    protected function getBarcodePNGPath($code, $type, $w = 2, $h = 30, $color = array(0, 0, 0), $showCode = false) {
+    protected function getBarcodePNGPath($code, $type, $w = 2, $h = 30, $color = array(0, 0, 0), $showCode = false, $marginCode = 0) {
         if (!$this->store_path) {
             $this->setStorPath(app('config')->get("barcode.store_path"));
         }
@@ -273,7 +273,7 @@ class DNS1D {
         if (function_exists('imagecreate')) {
             // GD library
             $imagick = false;
-            $png = imagecreate($width, $height);
+            $png = imagecreate($width, $height+$marginCode);
             $bgcol = imagecolorallocate($png, 255, 255, 255);
             imagecolortransparent($png, $bgcol);
             $fgcol = imagecolorallocate($png, $color[0], $color[1], $color[2]);
@@ -314,7 +314,7 @@ class DNS1D {
             } else {
                 $width_text = imagefontwidth(3) * strlen($code);
                 $height_text = imagefontheight(3);
-                imagestring($png, 3, ($width/2) - ($width_text/2) , ($height - $height_text) , $code, $fgcol);
+                imagestring($png, 3, ($width/2) - ($width_text/2) , ($height - $height_text)+$marginCode , $code, $fgcol);
             }
 
         $file_name= Str::slug($code);
